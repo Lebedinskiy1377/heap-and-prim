@@ -18,6 +18,7 @@ const int V = 6;
 
 void prim(AdjancentMatrixGraph*& gr, pr_queue q, vector<bool>& used, int start, set<pair<int, int>>& T, vector<pair<int, int>>& dist);
 void prim1(AdjancentMatrixGraph*& G, int start, set<pair<int ,int>> &T);
+bool f(vector<pair<int, int>> vec, vector<bool> used);
 
 int main() {
 	AdjancentMatrixGraph *gr = new AdjancentMatrixGraph(V);
@@ -82,13 +83,24 @@ void prim(AdjancentMatrixGraph*& gr, pr_queue q, vector<bool>& used, int start, 
 }
 
 
-void prim1(AdjancentMatrixGraph*& G, int start, set<pair<int, int>>& T) { //
+void prim1(AdjancentMatrixGraph*& G, int start, set<pair<int, int>>& T) { 
+	vector<bool> used(G->getSize() + 1);
 	pr_queue q(100);
-	for (int i = start; i <= G->getSize(); ++i) {
-		auto vec = G->adjacent_vertices(i);
+	while (!used[start]) {
+		used[start] = 1;
+		auto vec = G->adjacent_vertices(start);
 		for (auto& it : vec)
-			q.push(i, it.first, it.second);
+			if (!used[it.first])
+			    q.push(start, it.first, it.second);
 		T.insert(q.top());
-		q.clear();
+		start = q.top().second;
+		q.pop();
 	}
+}
+
+bool f(vector<pair<int, int>> vec, vector<bool> used) {
+	for (auto& it : vec)
+		if (used[it.second] == 1)
+			return 0;
+	return 1;
 }
