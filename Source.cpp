@@ -92,7 +92,8 @@ void prim1(AdjancentMatrixGraph*& G, int start, set<pair<int, int>>& T) {
 		for (auto& it : vec)
 			if (!used[it.first])
 			    q.push(start, it.first, it.second);
-		T.insert(q.top());
+		if (!used[q.top().second])
+		  T.insert(q.top());
 		start = q.top().second;
 		q.pop();
 	}
