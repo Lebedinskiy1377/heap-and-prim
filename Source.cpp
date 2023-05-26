@@ -84,18 +84,18 @@ void prim(AdjancentMatrixGraph*& gr, pr_queue q, vector<bool>& used, int start, 
 
 
 void prim1(AdjancentMatrixGraph*& G, int start, set<pair<int, int>>& T) { 
-	vector<bool> used(G->getSize() + 1);
-	pr_queue q(100);
-	while (!used[start]) {
-		used[start] = 1;
-		auto vec = G->adjacent_vertices(start);
-		for (auto& it : vec)
-			if (!used[it.first])
-			    q.push(start, it.first, it.second);
-		if (!used[q.top().second])
-		  T.insert(q.top());
-		start = q.top().second;
-		q.pop();
+	vector<bool> used(G->getSize() + 1); //задание размера массиву посещенных вершин
+	pr_queue q(100);//выделение памяти под очередь с приоритетом (ребра с наименьшим весом имеют наибольший приоритет)
+	while (!used[start]) { //цикл пока текущая вершина не является пройденной
+		used[start] = 1; //пометка текущей вершины как посещенной
+		auto vec = G->adjacent_vertices(start); // массив вершин, в которые можно пойти из текущей (start)
+		for (auto& it : vec) //перебор вершин графа
+			if (!used[it.first]) //ести не посещенная, то
+			    q.push(start, it.first, it.second); //добавляем в очередь (start - текущая, it.first - куда идем из start, it.second - вес ребра)
+		if (!used[q.top().second]) //если вторая вершина наименьшего ребра в очереди не посещена, то
+		  T.insert(q.top()); //добавляем ребро в множество решений (минимальное оставное дерево)
+		start = q.top().second; //переприсваиваем текущей вершине следующую вершину, которая должна быть в минимальном оставном дереве
+		q.pop(); //достаём ребро из очереди
 	}
 }
 
